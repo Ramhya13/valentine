@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💝 For My Handsome 💝</title>
+    <!-- Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
+    <style>
+        /* Gameboy Inspired Retro Style */
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background: #ffd1dc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .gameboy-frame {
+            max-width: 600px;
+            width: 100%;
+            background: #fff0f2;
+            border: 15px solid #ffb6c1;
+            border-radius: 30px 30px 40px 40px;
+            box-shadow: 
+                20px 20px 0 #ff9eb5,
+                0 0 0 5px #ff4d6d inset,
+                0 0 0 8px #fff inset;
+            position: relative;
+            padding: 30px 20px;
+        }
+        
+        .screen {
+            background: #ffe4e6;
+            border: 8px solid #ff8c9e;
+            border-radius: 20px;
+            padding: 30px 20px;
+            position: relative;
+            image-rendering: pixelated;
+            box-shadow: inset 0 0 20px rgba(255, 77, 109, 0.2);
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .screen::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(255, 105, 180, 0.1) 0px,
+                rgba(255, 255, 255, 0.1) 2px,
+                transparent 4px
+            );
+            pointer-events: none;
+            border-radius: 12px;
+        }
+        
+        .game-title {
+            font-size: 16px;
+            color: #ff1744;
+            text-align: center;
+            line-height: 2;
+            text-shadow: 4px 4px 0 #ffb3b3;
+            margin-bottom: 30px;
+            word-break: break-word;
+        }
+        
+        .question-text {
+            font-size: 14px;
+            color: #c2185b;
+            text-align: center;
+            line-height: 1.8;
+            margin-bottom: 40px;
+        }
+        
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn-yes {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 12px;
+            padding: 15px 25px;
+            background: #ff4d6d;
+            color: white;
+            border: none;
+            border-radius: 15px 15px 25px 25px;
+            box-shadow: 
+                0 8px 0 #b3002d,
+                0 10px 20px rgba(255, 0, 76, 0.3);
+            cursor: pointer;
+            transition: all 0.05s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+        }
+        
+        .btn-yes:hover {
+            transform: translateY(6px);
+            box-shadow: 
+                0 2px 0 #b3002d,
+                0 10px 20px rgba(255, 0, 76, 0.3);
+            background: #ff3355;
+        }
+        
+        .btn-no {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 12px;
+            padding: 15px 25px;
+            background: #c0c0c0;
+            color: #808080;
+            border: 2px solid #a0a0a0;
+            border-radius: 15px 15px 25px 25px;
+            box-shadow: 0 4px 0 #6b6b6b;
+            opacity: 0.6;
+            cursor: not-allowed;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            pointer-events: none;
+        }
+        
+        .page {
+            display: none;
+            text-align: center;
+            height: 100%;
+        }
+        
+        .page.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 450px;
+        }
+        
+        /* CAT ANIMATION - FIXED VERSION */
+        .cat-animation {
+            font-size: 80px;
+            animation: dance 0.3s infinite alternate ease-in-out;
+            margin: 20px auto;
+            padding: 20px;
+            display: inline-block;
+            filter: drop-shadow(0 10px 5px rgba(255, 77, 109, 0.3));
+            transform-origin: center;
+        }
+        
+        /* Hat on cat */
+        .cat-with-hat {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .cat-with-hat::before {
+            content: "🎩";
+            font-size: 40px;
+            position: absolute;
+            top: -30px;
+            left: 15px;
+            transform: rotate(-5deg);
+            animation: hat-bounce 0.5s infinite alternate;
+            z-index: 10;
+        }
+        
+        .cat-with-hat::after {
+            content: "✨";
+            font-size: 20px;
+            position: absolute;
+            top: -35px;
+            right: 5px;
+            animation: sparkle 0.8s infinite;
+        }
+        
+        @keyframes dance {
+            0% { transform: translateY(0px) rotate(-5deg) scale(1); }
+            100% { transform: translateY(-20px) rotate(5deg) scale(1.1); }
+        }
+        
+        @keyframes hat-bounce {
+            0% { transform: rotate(-5deg) translateY(0); }
+            100% { transform: rotate(8deg) translateY(-5px); }
+        }
+        
+        @keyframes sparkle {
+            0% { opacity: 0.5; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+            100% { opacity: 0.5; transform: scale(0.8); }
+        }
+        
+        /* PHOTO FRAME - FIXED VERSION */
+        .photo-section {
+            background: #ffb6c1;
+            padding: 20px;
+            border-radius: 30px;
+            border: 8px solid #ff4d6d;
+            margin: 20px auto;
+            width: 90%;
+            max-width: 350px;
+            box-shadow: 0 0 0 5px #ffe4e6;
+        }
+        
+        .photo-placeholder {
+            background: #ffe0e5;
+            padding: 30px;
+            border-radius: 20px;
+            border: 4px dashed #ff1744;
+            margin-bottom: 15px;
+        }
+        
+        .us-emojis {
+            font-size: 60px;
+            margin-bottom: 10px;
+        }
+        
+        .photo-caption {
+            font-size: 14px;
+            color: #ff1744;
+            margin: 10px 0;
+            line-height: 1.5;
+            word-break: break-word;
+        }
+        
+        /* For actual photo upload */
+        .real-photo {
+            width: 100%;
+            max-width: 280px;
+            border-radius: 15px;
+            border: 6px solid #ff4d6d;
+            margin: 10px auto;
+            display: block;
+        }
+        
+        .dancing-cat-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+        
+        .heart-decoration {
+            position: absolute;
+            font-size: 20px;
+            opacity: 0.6;
+        }
+        
+        .dpad {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding: 0 20px;
+            width: 100%;
+        }
+        
+        .dpad-left {
+            font-size: 30px;
+            color: #ff4d6d;
+            opacity: 0.5;
+        }
+        
+        .dpad-right {
+            font-size: 30px;
+            color: #ff4d6d;
+            opacity: 0.5;
+        }
+        
+        @media (max-width: 600px) {
+            .game-title { font-size: 14px; }
+            .question-text { font-size: 11px; }
+            .btn-yes, .btn-no { font-size: 9px; padding: 12px 15px; }
+            .cat-animation { font-size: 70px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="gameboy-frame">
+        <div class="screen">
+            <!-- PAGE 1 - Hello Handsome (FIXED: removed Valentine text) -->
+            <div id="page1" class="page active">
+                <div class="heart-decoration" style="top: 20px; left: 20px;">❤️</div>
+                <div class="heart-decoration" style="bottom: 20px; right: 20px;">❤️</div>
+                
+                <h1 class="game-title" style="margin-top: 30px; margin-bottom: 50px;">Hello Handsome</h1>
+                
+                <div style="margin: 40px 0;">
+                    <button onclick="nextPage(2)" class="btn-yes">Yes</button>
+                </div>
+                
+                <div class="dpad">
+                    <span class="dpad-left">◀</span>
+                    <span style="color: #ff4d6d; font-size: 16px;">❤️ ❤️ ❤️</span>
+                    <span class="dpad-right">▶</span>
+                </div>
+            </div>
+            
+            <!-- PAGE 2 - Will you be my Valentine? -->
+            <div id="page2" class="page">
+                <div class="heart-decoration" style="top: 20px; left: 20px;">💝</div>
+                <div class="heart-decoration" style="bottom: 20px; right: 20px;">💘</div>
+                
+                <h2 class="question-text" style="margin-top: 30px;">Will you be my Valentine?</h2>
+                
+                <div class="button-container">
+                    <button onclick="nextPage(3); startConfetti();" class="btn-yes">Yes, my princess</button>
+                    <button class="btn-no">Absolutely Not</button>
+                </div>
+                
+                <p style="color: #999; font-size: 8px; margin-top: 30px;">
+                    (the red button is the only way 💕)
+                </p>
+                
+                <div class="dpad" style="margin-top: 30px;">
+                    <span class="dpad-left">◀</span>
+                    <span style="color: #ff1744;">⬤ ⬤ ⬤</span>
+                    <span class="dpad-right">▶</span>
+                </div>
+            </div>
+            
+            <!-- PAGE 3 - Celebration (FIXED: Removed "Dancing Cat Celebration" text, updated message) -->
+            <div id="page3" class="page">
+                <div class="dancing-cat-container">
+                    
+                    <!-- DANCING CAT WITH HAT - NO TEXT ABOVE IT -->
+                    <div class="cat-animation">
+                        <span class="cat-with-hat">🐱</span>
+                    </div>
+                    
+                    <!-- PHOTO SECTION - WORKS WITH OR WITHOUT REAL PHOTO -->
+                    <div class="photo-section">
+                        <!-- This will show either a real photo or cute emojis -->
+                        <div id="photo-container">
+                            <!-- TRY TO LOAD REAL PHOTO FIRST -->
+                            <img src="us.jpg" alt="Us" class="real-photo" id="us-photo" style="display: none;" onerror="showEmojiFallback()">
+                            
+                            <!-- EMOJI FALLBACK (shows if photo fails to load) -->
+                            <div id="emoji-fallback">
+                                <div class="us-emojis">👩‍❤️‍👨</div>
+                                <div class="photo-caption">HAPPY VALENTINE'S MY LOVE</div>
+                                <div class="photo-caption" style="font-size: 12px;">(Our Perfect Valentine Photo)</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- NEW MESSAGE AS REQUESTED -->
+                    <p style="color: #ff1744; font-size: 11px; margin: 15px 0; line-height: 1.6; max-width: 400px;">
+                        Thank you for choosing us everyday ❤️
+                    </p>
+                    
+                    <!-- Play Again Button -->
+                    <button onclick="nextPage(1)" class="btn-yes" style="margin-top: 10px; font-size: 10px;">
+                        PLAY AGAIN 🔄
+                    </button>
+                    
+                    <div class="dpad" style="margin-top: 15px;">
+                        <span class="dpad-left">◀</span>
+                        <span style="color: #ff4d6d;">⭐ ⭐ ⭐</span>
+                        <span class="dpad-right">▶</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Page Navigation
+        function nextPage(pageNumber) {
+            document.getElementById('page1').classList.remove('active');
+            document.getElementById('page2').classList.remove('active');
+            document.getElementById('page3').classList.remove('active');
+            document.getElementById('page' + pageNumber).classList.add('active');
+            
+            if (pageNumber === 3) {
+                startConfetti();
+                tryToLoadPhoto();
+            }
+        }
+        
+        // Try to load the real photo
+        function tryToLoadPhoto() {
+            const img = document.getElementById('us-photo');
+            if (img) {
+                // Try to load the photo
+                img.style.display = 'block';
+                // If it fails, onerror will trigger showEmojiFallback
+            }
+        }
+        
+        // Show emoji fallback if photo fails
+        function showEmojiFallback() {
+            document.getElementById('us-photo').style.display = 'none';
+            document.getElementById('emoji-fallback').style.display = 'block';
+        }
+        
+        // Confetti Function
+        function startConfetti() {
+            for (let i = 0; i < 8; i++) {
+                setTimeout(() => {
+                    confetti({
+                        particleCount: 80,
+                        spread: 80,
+                        origin: { y: 0.5, x: i / 8 },
+                        colors: ['#ff4d6d', '#ffb6c1', '#ff1744', '#ff8c9e', '#ffffff']
+                    });
+                }, i * 150);
+            }
+        }
+        
+        // Initialize on load
+        window.onload = function() {
+            // Make sure emoji fallback is visible initially
+            document.getElementById('emoji-fallback').style.display = 'block';
+            
+            if (document.getElementById('page3').classList.contains('active')) {
+                startConfetti();
+            }
+        };
+    </script>
+    
+    <!-- Floating hearts -->
+    <div style="position: fixed; bottom: 10px; left: 10px; font-size: 24px; opacity: 0.2;">💗</div>
+    <div style="position: fixed; top: 10px; right: 10px; font-size: 30px; opacity: 0.2;">💖</div>
+</body>
+</html>
